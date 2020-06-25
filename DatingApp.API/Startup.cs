@@ -36,8 +36,9 @@ namespace DatingApp.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
+           // app.UseHttpsRedirection();
+            app.UseMvc();
+            
             app.UseRouting();
 
             app.UseAuthorization();
