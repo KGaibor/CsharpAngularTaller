@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Apps\\angular8\\DatingApp\\datingapp.api\\DatingApp.API.csproj": {}
+    "E:\\Apps\\angular8\\DatingApp\\DatingApp.API\\DatingApp.API.csproj": {}
   },
   "projects": {
-    "E:\\Apps\\angular8\\DatingApp\\datingapp.api\\DatingApp.API.csproj": {
+    "E:\\Apps\\angular8\\DatingApp\\DatingApp.API\\DatingApp.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Apps\\angular8\\DatingApp\\datingapp.api\\DatingApp.API.csproj",
+        "projectUniqueName": "E:\\Apps\\angular8\\DatingApp\\DatingApp.API\\DatingApp.API.csproj",
         "projectName": "DatingApp.API",
-        "projectPath": "E:\\Apps\\angular8\\DatingApp\\datingapp.api\\DatingApp.API.csproj",
+        "projectPath": "E:\\Apps\\angular8\\DatingApp\\DatingApp.API\\DatingApp.API.csproj",
         "packagesPath": "C:\\Users\\Kleber\\.nuget\\packages\\",
-        "outputPath": "E:\\Apps\\angular8\\DatingApp\\datingapp.api\\obj\\",
+        "outputPath": "E:\\Apps\\angular8\\DatingApp\\DatingApp.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\",
@@ -42,6 +42,20 @@
       },
       "frameworks": {
         "netcoreapp3.0": {
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
