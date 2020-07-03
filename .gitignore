@@ -1,0 +1,11 @@
+.vscode
+e2e
+node_modules
+*.obj
+*.dll
+*.pdb
+*.exe
+obj/
+bin/
+*.db*
+appsetting.json
