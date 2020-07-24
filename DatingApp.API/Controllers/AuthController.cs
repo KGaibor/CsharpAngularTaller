@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Text;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using AutoMapper;
 
 namespace DatingApp.API.Controllers
 {
@@ -18,8 +19,10 @@ namespace DatingApp.API.Controllers
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
-        public AuthController(IAuthRepository repo, IConfiguration config )
+        private readonly IMapper _mapper;
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
         {
+            _mapper = mapper;
             _config = config;
             _repo = repo;
         }
@@ -31,7 +34,7 @@ namespace DatingApp.API.Controllers
         {
             // se aplica cuanod se comenta el Apirontroller
             //if (!ModelState.IsValid)
-              //  return BadRequest(ModelState);
+            //  return BadRequest(ModelState);
 
             userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
 
@@ -42,10 +45,10 @@ namespace DatingApp.API.Controllers
 
             var userToCreate = new User
             {
-                 Username = userForRegisterDto.Username   
+                Username = userForRegisterDto.Username
             };
 
-            var createdUser = await _repo.Register(userToCreate , userForRegisterDto.Password);
+            var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
 
             return StatusCode(201);
         }
@@ -53,43 +56,50 @@ namespace DatingApp.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
-             try{
-            
-                    var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
+            try
+            {
 
-                    if(userFromRepo==null)
-                        return Unauthorized();
+                var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
 
-                    var claims = new[]
-                    {
+                if (userFromRepo == null)
+                    return Unauthorized();
+
+                var claims = new[]
+                {
                         new Claim(ClaimTypes.NameIdentifier, userFromRepo.id.ToString()),
                         new Claim(ClaimTypes.Name, userFromRepo.Username)
-                        
+
                     };
 
-                    var key = new SymmetricSecurityKey(Encoding.UTF8
-                    .GetBytes( _config.GetSection("AppSettings:Token").Value));
+                var key = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(_config.GetSection("AppSettings:Token").Value));
 
-                    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-                    var tokenDescriptor = new SecurityTokenDescriptor
-                    {
-                        Subject = new ClaimsIdentity(claims),
-                        Expires = DateTime.Now.AddDays(1),
-                        SigningCredentials = creds
-                    };
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(claims),
+                    Expires = DateTime.Now.AddDays(1),
+                    SigningCredentials = creds
+                };
 
-                    var tokenHandler = new JwtSecurityTokenHandler();
+                var tokenHandler = new JwtSecurityTokenHandler();
 
-                    var token = tokenHandler.CreateToken(tokenDescriptor);
+                var token = tokenHandler.CreateToken(tokenDescriptor);
 
-                    return Ok(new {
-                        token = tokenHandler.WriteToken(token)
-                        });
-                }
-                catch{
-                    return StatusCode(500,"Error login.. ");
-                } 
+                var user = _mapper.Map<UserForListDto>(userFromRepo);
+
+                return Ok(new
+                {
+                    token = tokenHandler.WriteToken(token),
+                    user
+                });
+
+            }
+            catch
+            {
+                return StatusCode(500, "Error login.. ");
+            }
         }
 
     }
