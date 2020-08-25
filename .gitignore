@@ -9,3 +9,4 @@ obj/
 bin/
 *.db*
 appsetting.json
+wwwroot
